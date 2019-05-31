@@ -35,6 +35,9 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Usuarios.findByEmail", query = "SELECT u FROM Usuarios u WHERE u.email = :email"),
     @NamedQuery(name = "Usuarios.findByContrasenya", query = "SELECT u FROM Usuarios u WHERE u.contrasenya = :contrasenya")})
 public class Usuarios implements Serializable {
+    @Basic(optional = false)
+    @Column(name = "es_admin")
+    private boolean esAdmin;
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -131,6 +134,14 @@ public class Usuarios implements Serializable {
     @Override
     public String toString() {
         return "web.Usuarios[ idUsuario=" + idUsuario + " ]";
+    }
+
+    public boolean getEsAdmin() {
+        return esAdmin;
+    }
+
+    public void setEsAdmin(boolean esAdmin) {
+        this.esAdmin = esAdmin;
     }
     
 }

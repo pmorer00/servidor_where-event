@@ -41,8 +41,7 @@ public class UsuariosFacadeREST extends AbstractFacade<Usuarios> {
         return iniciar_sesion(entity);
     }
     public Usuarios iniciar_sesion(Usuarios entity) {
-        List<Usuarios> usuarios = findAll();
-        for(Usuarios usuarioAux : usuarios){
+        for(Usuarios usuarioAux : findAll()){
             if((usuarioAux.getNickname().equals(entity.getNickname())
                         || usuarioAux.getEmail().equals(entity.getEmail()))
                     && usuarioAux.getContrasenya().equals(entity.getContrasenya())){
@@ -63,7 +62,7 @@ public class UsuariosFacadeREST extends AbstractFacade<Usuarios> {
                 return false;
             }
         }
-        
+        entity.setEsAdmin(false);
         super.create(entity);
         return true;
     }

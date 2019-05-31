@@ -18,6 +18,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import web.Categorias;
+import web.Usuarios;
 
 /**
  *
@@ -31,30 +32,59 @@ public class CategoriasFacadeREST extends AbstractFacade<Categorias> {
     public CategoriasFacadeREST() {
         super(Categorias.class);
     }
+    
+    public Usuarios tienePermisos(Usuarios usuario){
+        UsuariosFacadeREST usuarioFR = new UsuariosFacadeREST();
+        Usuarios sesion = usuarioFR.iniciar_sesion(usuario);
+        if(sesion!=null && sesion.getEsAdmin()){
+            return sesion;
+        }
+        return null;
+    }
 
     @POST
-    @Override
-    @Path("/crear_categoria")
+    @Path("/crear")
     @Consumes({"application/xml", "application/json"})
-    public void create(Categorias entity) {
-        super.create(entity);
+    public boolean crear(Categorias entity, Usuarios usuario) {
+        if(tienePermisos(usuario)!=null){
+            for(Categorias categoriaAux : findAll()){
+                if(categoriaAux.getNombre().equals(entity.getNombre())){
+                    return false;
+                }
+            }
+            super.create(entity);
+            return true;
+        }
+        return false;
     }
 
     @PUT
-    @Path("/modificar_categoria/{id}")
+    @Path("/modificar/{id}")
     @Consumes({"application/xml", "application/json"})
-    public void edit(@PathParam("id") Integer id, Categorias entity) {
-        super.edit(entity);
+    public boolean edit(@PathParam("id") Integer id, Categorias entity, Usuarios usuario) {
+        if(tienePermisos(usuario)!=null){
+            for(Categorias categoriaAux : findAll()){
+                if(categoriaAux.getIdCategoria()==entity.getIdCategoria()){
+                    super.edit(entity);
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     @DELETE
-    @Path("//{id}")
-    public void remove(@PathParam("id") Integer id) {
-        super.remove(super.find(id));
+    @Path("/eliminar/{id}")
+    public boolean remove(@PathParam("id") Integer id, Usuarios usuario) {
+        if(tienePermisos(usuario)!=null){
+            super.remove(super.find(id));
+            return true;
+        }
+        return false;
     }
 
     @GET
-    @Path("{id}")
+    @Path("/get/{id}")
     @Produces({"application/xml", "application/json"})
     public Categorias find(@PathParam("id") Integer id) {
         return super.find(id);
@@ -62,20 +92,21 @@ public class CategoriasFacadeREST extends AbstractFacade<Categorias> {
 
     @GET
     @Override
+    @Path("/get")
     @Produces({"application/xml", "application/json"})
     public List<Categorias> findAll() {
         return super.findAll();
     }
 
     @GET
-    @Path("{from}/{to}")
+    @Path("/get/{from}/{to}")
     @Produces({"application/xml", "application/json"})
     public List<Categorias> findRange(@PathParam("from") Integer from, @PathParam("to") Integer to) {
         return super.findRange(new int[]{from, to});
     }
 
     @GET
-    @Path("count")
+    @Path("/count")
     @Produces("text/plain")
     public String countREST() {
         return String.valueOf(super.count());

@@ -18,6 +18,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import web.Eventos;
+import web.Usuarios;
 
 /**
  *
@@ -32,25 +33,51 @@ public class EventosFacadeREST extends AbstractFacade<Eventos> {
     public EventosFacadeREST() {
         super(Eventos.class);
     }
+    
+    public Usuarios iniciarSesion(Usuarios usuario){
+        UsuariosFacadeREST usuarioFR = new UsuariosFacadeREST();
+        Usuarios sesion = usuarioFR.iniciar_sesion(usuario);
+        return sesion;
+    }
 
     @POST
-    @Override
+    @Path("/crear")
     @Consumes({"application/xml", "application/json"})
-    public void create(Eventos entity) {
-        super.create(entity);
+    public boolean crear(Eventos entity) {
+        UsuariosFacadeREST usuarioFR = new UsuariosFacadeREST();
+        Usuarios usuario = usuarioFR.find(entity.getIdUsuario());
+        if(usuario != null && iniciarSesion(usuario)!= null){
+            super.create(entity);
+            return true;
+        }
+        return false;
     }
 
     @PUT
     @Path("{id}")
     @Consumes({"application/xml", "application/json"})
-    public void edit(@PathParam("id") Integer id, Eventos entity) {
-        super.edit(entity);
+    public boolean edit(@PathParam("id") Integer id, Eventos entity) {
+        UsuariosFacadeREST usuarioFR = new UsuariosFacadeREST();
+        Usuarios usuario = usuarioFR.find(entity.getIdUsuario());
+        if(usuario != null && iniciarSesion(usuario)!= null){
+            for(Eventos eventoAux : findAll()){
+                if(eventoAux.getIdEvento()==entity.getIdEvento()){
+                    super.edit(entity);
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     @DELETE
     @Path("{id}")
-    public void remove(@PathParam("id") Integer id) {
-        super.remove(super.find(id));
+    public boolean remove(@PathParam("id") Integer id, Usuarios usuario) {
+        if(iniciarSesion(usuario)!= null){
+            super.remove(super.find(id));
+            return true;
+        }
+        return false;
     }
 
     @GET
