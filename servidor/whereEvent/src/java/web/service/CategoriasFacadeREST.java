@@ -24,7 +24,6 @@ import web.Categorias;
  * @author Kazuma
  */
 @Stateless
-@Path("web.categorias")
 public class CategoriasFacadeREST extends AbstractFacade<Categorias> {
     @PersistenceContext(unitName = "whereEventPU")
     private EntityManager em;
@@ -35,20 +34,21 @@ public class CategoriasFacadeREST extends AbstractFacade<Categorias> {
 
     @POST
     @Override
+    @Path("/crear_categoria")
     @Consumes({"application/xml", "application/json"})
     public void create(Categorias entity) {
         super.create(entity);
     }
 
     @PUT
-    @Path("{id}")
+    @Path("/modificar_categoria/{id}")
     @Consumes({"application/xml", "application/json"})
     public void edit(@PathParam("id") Integer id, Categorias entity) {
         super.edit(entity);
     }
 
     @DELETE
-    @Path("{id}")
+    @Path("//{id}")
     public void remove(@PathParam("id") Integer id) {
         super.remove(super.find(id));
     }

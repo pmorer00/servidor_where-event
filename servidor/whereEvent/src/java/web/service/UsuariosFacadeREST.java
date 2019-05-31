@@ -33,28 +33,68 @@ public class UsuariosFacadeREST extends AbstractFacade<Usuarios> {
         super(Usuarios.class);
     }
 
-    @POST
-    @Override
+    @PUT
+    @Path("/iniciar_sesion/{id}")
     @Consumes({"application/xml", "application/json"})
-    public void create(Usuarios entity) {
+    @Produces("text/plain")
+    public Usuarios iniciar_sesion(@PathParam("id") Integer id, Usuarios entity) {
+        return iniciar_sesion(entity);
+    }
+    public Usuarios iniciar_sesion(Usuarios entity) {
+        List<Usuarios> usuarios = findAll();
+        for(Usuarios usuarioAux : usuarios){
+            if((usuarioAux.getNickname().equals(entity.getNickname())
+                        || usuarioAux.getEmail().equals(entity.getEmail()))
+                    && usuarioAux.getContrasenya().equals(entity.getContrasenya())){
+                return usuarioAux;
+            }
+        }
+        return null;
+    }
+
+    @POST
+    @Path("/crear")
+    @Consumes({"application/xml", "application/json"})
+    public boolean crear(Usuarios entity) {
+        List<Usuarios> usuarios = findAll();
+        for(Usuarios usuarioAux : usuarios){
+            if((usuarioAux.getNickname().equals(entity.getNickname())
+                        || usuarioAux.getEmail().equals(entity.getEmail()))){
+                return false;
+            }
+        }
+        
         super.create(entity);
+        return true;
     }
 
     @PUT
-    @Path("{id}")
+    @Path("/modificar/{id}")
     @Consumes({"application/xml", "application/json"})
-    public void edit(@PathParam("id") Integer id, Usuarios entity) {
-        super.edit(entity);
+    public boolean edit(@PathParam("id") Integer id, Usuarios entity) {
+        Usuarios sesion = iniciar_sesion(entity);
+        if(sesion != null && sesion.getIdUsuario() == entity.getIdUsuario()){
+            super.edit(entity);
+        }
+        
+        return sesion != null;
     }
 
     @DELETE
-    @Path("{id}")
-    public void remove(@PathParam("id") Integer id) {
-        super.remove(super.find(id));
+    @Path("/eliminar/{id}")
+    @Consumes({"application/xml", "application/json"})
+    @Produces("text/plain")
+    public boolean remove(@PathParam("id") Integer id, Usuarios entity) {
+        Usuarios sesion = iniciar_sesion(entity);
+        if(sesion != null && sesion.getIdUsuario() == entity.getIdUsuario()){
+            super.remove(super.find(id));
+        }
+        
+        return sesion != null;
     }
 
     @GET
-    @Path("{id}")
+    @Path("/get/{id}")
     @Produces({"application/xml", "application/json"})
     public Usuarios find(@PathParam("id") Integer id) {
         return super.find(id);
@@ -62,20 +102,21 @@ public class UsuariosFacadeREST extends AbstractFacade<Usuarios> {
 
     @GET
     @Override
+    @Path("/get")
     @Produces({"application/xml", "application/json"})
     public List<Usuarios> findAll() {
         return super.findAll();
     }
 
     @GET
-    @Path("{from}/{to}")
+    @Path("/get/{from}/{to}")
     @Produces({"application/xml", "application/json"})
     public List<Usuarios> findRange(@PathParam("from") Integer from, @PathParam("to") Integer to) {
         return super.findRange(new int[]{from, to});
     }
 
     @GET
-    @Path("count")
+    @Path("/count")
     @Produces("text/plain")
     public String countREST() {
         return String.valueOf(super.count());
