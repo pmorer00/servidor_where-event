@@ -25,6 +25,7 @@ import web.Usuarios;
  * @author Kazuma
  */
 @Stateless
+@Path("web.categorias")
 public class CategoriasFacadeREST extends AbstractFacade<Categorias> {
     @PersistenceContext(unitName = "whereEventPU")
     private EntityManager em;
