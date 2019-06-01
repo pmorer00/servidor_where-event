@@ -18,6 +18,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import web.Eventos;
+import web.Categorias;
 import web.Usuarios;
 
 /**
@@ -39,6 +40,14 @@ public class EventosFacadeREST extends AbstractFacade<Eventos> {
         Usuarios sesion = usuarioFR.iniciar_sesion(usuario);
         return sesion;
     }
+    
+    @GET
+    @Path("/get_categoria/{id}")
+    @Consumes({"application/xml", "application/json"})
+    @Produces({"application/xml", "application/json"})
+    public Categorias get_categoria(Eventos entity){
+        return null;
+    }
 
     @POST
     @Path("/crear")
@@ -54,7 +63,7 @@ public class EventosFacadeREST extends AbstractFacade<Eventos> {
     }
 
     @PUT
-    @Path("{id}")
+    @Path("/modificar/{id}")
     @Consumes({"application/xml", "application/json"})
     public boolean edit(@PathParam("id") Integer id, Eventos entity) {
         UsuariosFacadeREST usuarioFR = new UsuariosFacadeREST();
@@ -71,7 +80,7 @@ public class EventosFacadeREST extends AbstractFacade<Eventos> {
     }
 
     @DELETE
-    @Path("{id}")
+    @Path("/eliminar/{id}")
     public boolean remove(@PathParam("id") Integer id, Usuarios usuario) {
         if(iniciarSesion(usuario)!= null){
             super.remove(super.find(id));
@@ -81,13 +90,14 @@ public class EventosFacadeREST extends AbstractFacade<Eventos> {
     }
 
     @GET
-    @Path("{id}")
+    @Path("/get/{id}")
     @Produces({"application/xml", "application/json"})
     public Eventos find(@PathParam("id") Integer id) {
         return super.find(id);
     }
 
     @GET
+    @Path("/get")
     @Override
     @Produces({"application/xml", "application/json"})
     public List<Eventos> findAll() {
@@ -95,14 +105,14 @@ public class EventosFacadeREST extends AbstractFacade<Eventos> {
     }
 
     @GET
-    @Path("{from}/{to}")
+    @Path("/get/{from}/{to}")
     @Produces({"application/xml", "application/json"})
     public List<Eventos> findRange(@PathParam("from") Integer from, @PathParam("to") Integer to) {
         return super.findRange(new int[]{from, to});
     }
 
     @GET
-    @Path("count")
+    @Path("/count")
     @Produces("text/plain")
     public String countREST() {
         return String.valueOf(super.count());

@@ -7,6 +7,7 @@ package web;
 
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -21,6 +22,8 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -35,8 +38,19 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Eventos.findAll", query = "SELECT e FROM Eventos e"),
     @NamedQuery(name = "Eventos.findByIdEvento", query = "SELECT e FROM Eventos e WHERE e.idEvento = :idEvento"),
     @NamedQuery(name = "Eventos.findByNombre", query = "SELECT e FROM Eventos e WHERE e.nombre = :nombre"),
-    @NamedQuery(name = "Eventos.findByDescripcion", query = "SELECT e FROM Eventos e WHERE e.descripcion = :descripcion")})
+    @NamedQuery(name = "Eventos.findByDescripcion", query = "SELECT e FROM Eventos e WHERE e.descripcion = :descripcion")/*TODO: , @NamedQuery(name = "Eventos.filtrar", query = "SELECT e FROM Eventos e WHERE e.descripcion = :h")})*/})
+    
 public class Eventos implements Serializable {
+    @Basic(optional = false)
+    @Column(name = "fecha_inicio")
+    @Temporal(TemporalType.DATE)
+    private Date fechaInicio;
+    @Column(name = "fecha_fin")
+    @Temporal(TemporalType.DATE)
+    private Date fechaFin;
+    @Basic(optional = false)
+    @Column(name = "ubicacion")
+    private String ubicacion;
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -54,8 +68,6 @@ public class Eventos implements Serializable {
     @JoinColumn(name = "id_usuario", referencedColumnName = "id_usuario")
     @ManyToOne(optional = false)
     private Usuarios idUsuario;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "eventos")
-    private Collection<FechasYLugares> fechasYLugaresCollection;
 
     public Eventos() {
     }
@@ -111,15 +123,6 @@ public class Eventos implements Serializable {
         this.idUsuario = idUsuario;
     }
 
-    @XmlTransient
-    public Collection<FechasYLugares> getFechasYLugaresCollection() {
-        return fechasYLugaresCollection;
-    }
-
-    public void setFechasYLugaresCollection(Collection<FechasYLugares> fechasYLugaresCollection) {
-        this.fechasYLugaresCollection = fechasYLugaresCollection;
-    }
-
     @Override
     public int hashCode() {
         int hash = 0;
@@ -143,6 +146,30 @@ public class Eventos implements Serializable {
     @Override
     public String toString() {
         return "web.Eventos[ idEvento=" + idEvento + " ]";
+    }
+
+    public Date getFechaInicio() {
+        return fechaInicio;
+    }
+
+    public void setFechaInicio(Date fechaInicio) {
+        this.fechaInicio = fechaInicio;
+    }
+
+    public Date getFechaFin() {
+        return fechaFin;
+    }
+
+    public void setFechaFin(Date fechaFin) {
+        this.fechaFin = fechaFin;
+    }
+
+    public String getUbicacion() {
+        return ubicacion;
+    }
+
+    public void setUbicacion(String ubicacion) {
+        this.ubicacion = ubicacion;
     }
     
 }

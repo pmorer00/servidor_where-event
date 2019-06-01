@@ -18,6 +18,8 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import web.Usuarios;
+import web.Eventos;
+import java.util.ArrayList;
 
 /**
  *
@@ -33,13 +35,10 @@ public class UsuariosFacadeREST extends AbstractFacade<Usuarios> {
         super(Usuarios.class);
     }
 
-    @PUT
-    @Path("/iniciar_sesion/{id}")
+    @POST
+    @Path("/iniciar_sesion")
     @Consumes({"application/xml", "application/json"})
-    @Produces("text/plain")
-    public Usuarios iniciar_sesion(@PathParam("id") Integer id, Usuarios entity) {
-        return iniciar_sesion(entity);
-    }
+    @Produces({"application/xml", "application/json"})
     public Usuarios iniciar_sesion(Usuarios entity) {
         for(Usuarios usuarioAux : findAll()){
             if((usuarioAux.getNickname().equals(entity.getNickname())
@@ -51,20 +50,37 @@ public class UsuariosFacadeREST extends AbstractFacade<Usuarios> {
         return null;
     }
 
+    @GET
+    @Path("/get_eventos")
+    @Consumes({"application/xml", "application/json"})
+    @Produces("text/plain")
+    public List<Eventos> get_eventos(Usuarios usuario) {
+        List<Eventos> eventos = new ArrayList<Eventos>();
+        EventosFacadeREST eventosFR = new EventosFacadeREST();
+        for(Eventos eventoAux : eventosFR.findAll()){
+            if(usuario.getIdUsuario() == eventoAux.getIdUsuario().getIdUsuario()){
+                eventos.add(eventoAux);
+            }
+        }
+        
+        return eventos;
+    }
+
     @POST
     @Path("/crear")
     @Consumes({"application/xml", "application/json"})
-    public boolean crear(Usuarios entity) {
+    public Usuarios crear(Usuarios entity) {
         List<Usuarios> usuarios = findAll();
         for(Usuarios usuarioAux : usuarios){
             if((usuarioAux.getNickname().equals(entity.getNickname())
                         || usuarioAux.getEmail().equals(entity.getEmail()))){
-                return false;
+                return null;
             }
         }
         entity.setEsAdmin(false);
         super.create(entity);
-        return true;
+        entity = iniciar_sesion(entity);
+        return entity;
     }
 
     @PUT
