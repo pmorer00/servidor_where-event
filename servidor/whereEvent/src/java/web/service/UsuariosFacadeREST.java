@@ -84,15 +84,14 @@ public class UsuariosFacadeREST extends AbstractFacade<Usuarios> {
     }
 
     @PUT
-    @Path("/modificar/{id}")
+    @Path("/modificar")
     @Consumes({"application/xml", "application/json"})
-    public boolean edit(@PathParam("id") Integer id, Usuarios entity) {
-        Usuarios sesion = iniciar_sesion(entity);
-        if(sesion != null && sesion.getIdUsuario() == entity.getIdUsuario()){
-            super.edit(entity);
-        }
-        
-        return sesion != null;
+    public void editar(Usuarios entity) { 
+        String h= entity.getContrasenya();
+        System.out.println(h);
+        System.out.println(entity.getIdUsuario());
+         getEntityManager().createQuery("UPDATE Usuarios u SET u.contrasenya = "+h+" WHERE u.idUsuario = :id", Usuarios.class).setParameter("id", entity.getIdUsuario()).executeUpdate();
+      
     }
 
     @DELETE

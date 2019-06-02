@@ -76,12 +76,9 @@ public class EventosFacadeREST extends AbstractFacade<Eventos> {
 
     @DELETE
     @Path("/eliminar/{id}")
-    public boolean remove(@PathParam("id") Integer id, Usuarios usuario) {
-        if(iniciarSesion(usuario)!= null){
-            super.remove(super.find(id));
-            return true;
-        }
-        return false;
+    public boolean remove(@PathParam("id") Integer id) {
+        super.remove(super.find(id));
+        return true;
     }
 
     @GET
@@ -112,7 +109,15 @@ public class EventosFacadeREST extends AbstractFacade<Eventos> {
     public String countREST() {
         return String.valueOf(super.count());
     }
-
+    
+    @GET
+    @Path("/getEventosUsuario/{id}")
+    @Produces("application/json")
+    public List<Eventos> findEventosbyUsuario(@PathParam("id") Integer id) {
+        return getEntityManager().createQuery("SELECT e FROM Eventos e WHERE e.idUsuario.idUsuario = :id", Eventos.class).setParameter("id", id).getResultList();
+    }
+    
+    
     @Override
     protected EntityManager getEntityManager() {
         return em;

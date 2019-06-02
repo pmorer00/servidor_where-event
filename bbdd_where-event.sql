@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 02-06-2019 a las 18:08:48
+-- Tiempo de generación: 02-06-2019 a las 23:18:09
 -- Versión del servidor: 10.1.37-MariaDB
 -- Versión de PHP: 7.3.0
 
@@ -38,14 +38,15 @@ CREATE TABLE IF NOT EXISTS `categorias` (
   PRIMARY KEY (`id_categoria`),
   UNIQUE KEY `nombre` (`nombre`),
   UNIQUE KEY `id_categoria_padre` (`id_categoria_padre`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COLLATE=utf8_spanish2_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COLLATE=utf8_spanish2_ci;
 
 --
 -- Volcado de datos para la tabla `categorias`
 --
 
 INSERT INTO `categorias` (`id_categoria`, `id_categoria_padre`, `nombre`, `descripcion`) VALUES
-(1, NULL, 'Futbol', 'Futboleros');
+(1, NULL, 'Futbol', 'Futboleros'),
+(4, 1, 'gordo', 'sadfsadasd');
 
 -- --------------------------------------------------------
 
@@ -63,19 +64,16 @@ CREATE TABLE IF NOT EXISTS `eventos` (
   `ubicacion` varchar(50) COLLATE utf8_spanish2_ci NOT NULL,
   PRIMARY KEY (`id_evento`),
   KEY `id_usuario` (`id_usuario`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8 COLLATE=utf8_spanish2_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8 COLLATE=utf8_spanish2_ci;
 
 --
 -- Volcado de datos para la tabla `eventos`
 --
 
 INSERT INTO `eventos` (`id_evento`, `id_usuario`, `nombre`, `descripcion`, `fecha_inicio`, `fecha_fin`, `ubicacion`) VALUES
-(1, 17, 'Quedadita maja', 'Vamos a pasarlo muy bien', '2019-06-05 00:00:00', NULL, '42.615257, -5.557873'),
-(2, 13, 'Partido futbol cancha', 'Partido de futbol en la cancha de detrás de la uni', '2019-06-04 00:00:00', '2019-06-29 00:00:00', '42.615257, -5.557873'),
-(3, 7, 'Quedada conocer gente futbol', 'Quedada conocer gente jugando a futbol', '2019-06-26 00:00:00', NULL, '42.665257, -5.577873'),
 (4, 13, 'Partido baloncesto', 'Partido baloncesto', '02/06/2019 15:54', '03/06/2019 15:54', '37.422068484440004, -122.08413898944855'),
-(5, 21, 'asd', 'asfa', '02/06/2019 16:00', '11/06/2019 16:00', '37.422035999517064, -122.08288840949535'),
-(6, 21, 'Rubn Fernndez', 'hdksks', '02/06/2019 18:04', '02/06/2019 18:25', '42.618726267964675, -5.565965585410594');
+(11, 21, 'Tomar algo', 'Tomar algo en la palomera', '16/06/2019 19:00', NULL, '42.60600449666949, -5.566958673298359'),
+(12, 23, 'Partido de futbol', 'Partido de futbol en la universidad', '18/06/2019 17:00', NULL, '42.6151556106692, -5.557791888713837');
 
 -- --------------------------------------------------------
 
@@ -105,14 +103,14 @@ CREATE TABLE IF NOT EXISTS `usuarios` (
   PRIMARY KEY (`id_usuario`),
   UNIQUE KEY `nickname` (`nickname`),
   UNIQUE KEY `email` (`email`)
-) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8 COLLATE=utf8_spanish2_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=26 DEFAULT CHARSET=utf8 COLLATE=utf8_spanish2_ci;
 
 --
 -- Volcado de datos para la tabla `usuarios`
 --
 
 INSERT INTO `usuarios` (`id_usuario`, `nickname`, `email`, `contrasenya`, `es_admin`) VALUES
-(3, 'usuario3', 'usuario3@email.com', 'asdf1234', 0),
+(3, 'usuario3', 'usuario3@email.com', 'patata', 0),
 (7, 'pepe', 'correo@email.com', 'asdf1234', 0),
 (8, 'pepa', 'correa@email.com', 'asdf1234', 0),
 (9, 'pepi', 'correi@email.com', 'asdf1234', 0),
@@ -122,8 +120,10 @@ INSERT INTO `usuarios` (`id_usuario`, `nickname`, `email`, `contrasenya`, `es_ad
 (17, 'nombreenemail', 'emailennombre@', 'contrasenya', 0),
 (18, 'usurio2', 'sadw@', 'asdq', 0),
 (19, 'usuario2123', 'asdw2123@42', 'wq231234', 0),
-(21, '1234', '1234@com.com', '1234', 1),
-(22, '123456', '12345@1234dsfdf5.com', '12345', 0);
+(21, '1234', '1234@com.com', '12345', 1),
+(22, '123456', '12345@1234dsfdf5.com', '12345', 0),
+(23, 'ruben', 'ruben@gmail.com', 'ruben123', 0),
+(25, 'usuario', 'usuario@gmail.com', 'usuario', 0);
 
 --
 -- Restricciones para tablas volcadas
