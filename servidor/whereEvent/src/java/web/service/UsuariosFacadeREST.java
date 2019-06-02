@@ -5,6 +5,7 @@
  */
 package web.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -17,9 +18,8 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import web.Usuarios;
 import web.Eventos;
-import java.util.ArrayList;
+import web.Usuarios;
 
 /**
  *
@@ -28,7 +28,7 @@ import java.util.ArrayList;
 @Stateless
 @Path("web.usuarios")
 public class UsuariosFacadeREST extends AbstractFacade<Usuarios> {
-    @PersistenceContext(unitName = "whereEventPU")
+    @PersistenceContext(unitName = "whereEventNewPU")
     private EntityManager em;
 
     public UsuariosFacadeREST() {

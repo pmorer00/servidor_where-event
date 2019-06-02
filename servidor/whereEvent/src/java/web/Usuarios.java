@@ -33,11 +33,9 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Usuarios.findByIdUsuario", query = "SELECT u FROM Usuarios u WHERE u.idUsuario = :idUsuario"),
     @NamedQuery(name = "Usuarios.findByNickname", query = "SELECT u FROM Usuarios u WHERE u.nickname = :nickname"),
     @NamedQuery(name = "Usuarios.findByEmail", query = "SELECT u FROM Usuarios u WHERE u.email = :email"),
-    @NamedQuery(name = "Usuarios.findByContrasenya", query = "SELECT u FROM Usuarios u WHERE u.contrasenya = :contrasenya")})
+    @NamedQuery(name = "Usuarios.findByContrasenya", query = "SELECT u FROM Usuarios u WHERE u.contrasenya = :contrasenya"),
+    @NamedQuery(name = "Usuarios.findByEsAdmin", query = "SELECT u FROM Usuarios u WHERE u.esAdmin = :esAdmin")})
 public class Usuarios implements Serializable {
-    @Basic(optional = false)
-    @Column(name = "es_admin")
-    private boolean esAdmin;
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -53,6 +51,9 @@ public class Usuarios implements Serializable {
     @Basic(optional = false)
     @Column(name = "contrasenya")
     private String contrasenya;
+    @Basic(optional = false)
+    @Column(name = "es_admin")
+    private boolean esAdmin;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "idUsuario")
     private Collection<Eventos> eventosCollection;
 
@@ -63,11 +64,12 @@ public class Usuarios implements Serializable {
         this.idUsuario = idUsuario;
     }
 
-    public Usuarios(Integer idUsuario, String nickname, String email, String contrasenya) {
+    public Usuarios(Integer idUsuario, String nickname, String email, String contrasenya, boolean esAdmin) {
         this.idUsuario = idUsuario;
         this.nickname = nickname;
         this.email = email;
         this.contrasenya = contrasenya;
+        this.esAdmin = esAdmin;
     }
 
     public Integer getIdUsuario() {
@@ -102,6 +104,14 @@ public class Usuarios implements Serializable {
         this.contrasenya = contrasenya;
     }
 
+    public boolean getEsAdmin() {
+        return esAdmin;
+    }
+
+    public void setEsAdmin(boolean esAdmin) {
+        this.esAdmin = esAdmin;
+    }
+
     @XmlTransient
     public Collection<Eventos> getEventosCollection() {
         return eventosCollection;
@@ -134,14 +144,6 @@ public class Usuarios implements Serializable {
     @Override
     public String toString() {
         return "web.Usuarios[ idUsuario=" + idUsuario + " ]";
-    }
-
-    public boolean getEsAdmin() {
-        return esAdmin;
-    }
-
-    public void setEsAdmin(boolean esAdmin) {
-        this.esAdmin = esAdmin;
     }
     
 }

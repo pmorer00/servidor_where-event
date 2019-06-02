@@ -9,7 +9,6 @@ import java.io.Serializable;
 import java.util.Collection;
 import java.util.Date;
 import javax.persistence.Basic;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -20,7 +19,6 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -38,19 +36,16 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Eventos.findAll", query = "SELECT e FROM Eventos e"),
     @NamedQuery(name = "Eventos.findByIdEvento", query = "SELECT e FROM Eventos e WHERE e.idEvento = :idEvento"),
     @NamedQuery(name = "Eventos.findByNombre", query = "SELECT e FROM Eventos e WHERE e.nombre = :nombre"),
-    @NamedQuery(name = "Eventos.findByDescripcion", query = "SELECT e FROM Eventos e WHERE e.descripcion = :descripcion")/*TODO: , @NamedQuery(name = "Eventos.filtrar", query = "SELECT e FROM Eventos e WHERE e.descripcion = :h")})*/})
-    
+    @NamedQuery(name = "Eventos.findByDescripcion", query = "SELECT e FROM Eventos e WHERE e.descripcion = :descripcion"),
+    @NamedQuery(name = "Eventos.findByFechaInicio", query = "SELECT e FROM Eventos e WHERE e.fechaInicio = :fechaInicio"),
+    @NamedQuery(name = "Eventos.findByFechaFin", query = "SELECT e FROM Eventos e WHERE e.fechaFin = :fechaFin"),
+    @NamedQuery(name = "Eventos.findByUbicacion", query = "SELECT e FROM Eventos e WHERE e.ubicacion = :ubicacion")})
 public class Eventos implements Serializable {
     @Basic(optional = false)
     @Column(name = "fecha_inicio")
-    @Temporal(TemporalType.DATE)
-    private Date fechaInicio;
+    private String fechaInicio;
     @Column(name = "fecha_fin")
-    @Temporal(TemporalType.DATE)
-    private Date fechaFin;
-    @Basic(optional = false)
-    @Column(name = "ubicacion")
-    private String ubicacion;
+    private String fechaFin;
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -63,6 +58,9 @@ public class Eventos implements Serializable {
     @Basic(optional = false)
     @Column(name = "descripcion")
     private String descripcion;
+    @Basic(optional = false)
+    @Column(name = "ubicacion")
+    private String ubicacion;
     @ManyToMany(mappedBy = "eventosCollection")
     private Collection<Categorias> categoriasCollection;
     @JoinColumn(name = "id_usuario", referencedColumnName = "id_usuario")
@@ -76,10 +74,12 @@ public class Eventos implements Serializable {
         this.idEvento = idEvento;
     }
 
-    public Eventos(Integer idEvento, String nombre, String descripcion) {
+    public Eventos(Integer idEvento, String nombre, String descripcion, String fechaInicio, String ubicacion) {
         this.idEvento = idEvento;
         this.nombre = nombre;
         this.descripcion = descripcion;
+        this.fechaInicio = fechaInicio;
+        this.ubicacion = ubicacion;
     }
 
     public Integer getIdEvento() {
@@ -104,6 +104,30 @@ public class Eventos implements Serializable {
 
     public void setDescripcion(String descripcion) {
         this.descripcion = descripcion;
+    }
+
+    public String getFechaInicio() {
+        return fechaInicio;
+    }
+
+    public void setFechaInicio(String fechaInicio) {
+        this.fechaInicio = fechaInicio;
+    }
+
+    public String getFechaFin() {
+        return fechaFin;
+    }
+
+    public void setFechaFin(String fechaFin) {
+        this.fechaFin = fechaFin;
+    }
+
+    public String getUbicacion() {
+        return ubicacion;
+    }
+
+    public void setUbicacion(String ubicacion) {
+        this.ubicacion = ubicacion;
     }
 
     @XmlTransient
@@ -146,30 +170,6 @@ public class Eventos implements Serializable {
     @Override
     public String toString() {
         return "web.Eventos[ idEvento=" + idEvento + " ]";
-    }
-
-    public Date getFechaInicio() {
-        return fechaInicio;
-    }
-
-    public void setFechaInicio(Date fechaInicio) {
-        this.fechaInicio = fechaInicio;
-    }
-
-    public Date getFechaFin() {
-        return fechaFin;
-    }
-
-    public void setFechaFin(Date fechaFin) {
-        this.fechaFin = fechaFin;
-    }
-
-    public String getUbicacion() {
-        return ubicacion;
-    }
-
-    public void setUbicacion(String ubicacion) {
-        this.ubicacion = ubicacion;
     }
     
 }
