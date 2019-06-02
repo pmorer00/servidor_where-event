@@ -1,9 +1,9 @@
-﻿-- phpMyAdmin SQL Dump
+-- phpMyAdmin SQL Dump
 -- version 4.8.4
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 30-05-2019 a las 14:35:36
+-- Tiempo de generación: 01-06-2019 a las 20:59:16
 -- Versión del servidor: 10.1.37-MariaDB
 -- Versión de PHP: 7.3.0
 
@@ -45,7 +45,10 @@ CREATE TABLE `eventos` (
   `id_evento` int(50) NOT NULL,
   `id_usuario` int(25) NOT NULL,
   `nombre` varchar(50) COLLATE utf8_spanish2_ci NOT NULL,
-  `descripcion` varchar(250) COLLATE utf8_spanish2_ci NOT NULL
+  `descripcion` varchar(250) COLLATE utf8_spanish2_ci NOT NULL,
+  `fecha_inicio` date NOT NULL,
+  `fecha_fin` date DEFAULT NULL,
+  `ubicacion` varchar(19) COLLATE utf8_spanish2_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish2_ci;
 
 -- --------------------------------------------------------
@@ -62,19 +65,6 @@ CREATE TABLE `eve_cat` (
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `fechas_y_lugares`
---
-
-CREATE TABLE `fechas_y_lugares` (
-  `id_evento` int(50) NOT NULL,
-  `fecha_inicio` date NOT NULL,
-  `fecha_fin` date DEFAULT NULL,
-  `ubicacion` varchar(19) COLLATE utf8_spanish2_ci NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish2_ci;
-
--- --------------------------------------------------------
-
---
 -- Estructura de tabla para la tabla `usuarios`
 --
 
@@ -82,8 +72,25 @@ CREATE TABLE `usuarios` (
   `id_usuario` int(25) NOT NULL,
   `nickname` varchar(50) COLLATE utf8_spanish2_ci NOT NULL,
   `email` varchar(150) COLLATE utf8_spanish2_ci NOT NULL,
-  `contrasenya` varchar(100) COLLATE utf8_spanish2_ci NOT NULL
+  `contrasenya` varchar(100) COLLATE utf8_spanish2_ci NOT NULL,
+  `es_admin` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish2_ci;
+
+--
+-- Volcado de datos para la tabla `usuarios`
+--
+
+INSERT INTO `usuarios` (`id_usuario`, `nickname`, `email`, `contrasenya`, `es_admin`) VALUES
+(2, 'usuario2', 'email@email.com', 'asdf1234', 0),
+(3, 'usuario3', 'usuario3@email.com', 'asdf1234', 0),
+(7, 'pepe', 'correo@email.com', 'asdf1234', 0),
+(8, 'pepa', 'correa@email.com', 'asdf1234', 0),
+(9, 'pepi', 'correi@email.com', 'asdf1234', 0),
+(11, 'asdf@', 'asdf@', 'asdf', 0),
+(12, '1234', '1234@1234.com', '1234', 0),
+(13, '12345', '12345@12345.com', '12345', 0),
+(16, 'pablo', 'pablo', 'pablo', 0),
+(17, 'nombreenemail', 'emailennombre@', 'contrasenya', 0);
 
 --
 -- Índices para tablas volcadas
@@ -110,12 +117,6 @@ ALTER TABLE `eventos`
 ALTER TABLE `eve_cat`
   ADD PRIMARY KEY (`id_categoria`,`id_evento`),
   ADD KEY `id_evento` (`id_evento`);
-
---
--- Indices de la tabla `fechas_y_lugares`
---
-ALTER TABLE `fechas_y_lugares`
-  ADD PRIMARY KEY (`id_evento`,`fecha_inicio`,`ubicacion`);
 
 --
 -- Indices de la tabla `usuarios`
@@ -145,7 +146,7 @@ ALTER TABLE `eventos`
 -- AUTO_INCREMENT de la tabla `usuarios`
 --
 ALTER TABLE `usuarios`
-  MODIFY `id_usuario` int(25) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_usuario` int(25) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
 -- Restricciones para tablas volcadas
@@ -169,12 +170,6 @@ ALTER TABLE `eventos`
 ALTER TABLE `eve_cat`
   ADD CONSTRAINT `eve_cat_ibfk_1` FOREIGN KEY (`id_categoria`) REFERENCES `categorias` (`id_categoria`) ON UPDATE CASCADE,
   ADD CONSTRAINT `eve_cat_ibfk_2` FOREIGN KEY (`id_evento`) REFERENCES `eventos` (`id_evento`) ON UPDATE CASCADE;
-
---
--- Filtros para la tabla `fechas_y_lugares`
---
-ALTER TABLE `fechas_y_lugares`
-  ADD CONSTRAINT `fechas_y_lugares_ibfk_1` FOREIGN KEY (`id_evento`) REFERENCES `eventos` (`id_evento`) ON DELETE CASCADE ON UPDATE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
