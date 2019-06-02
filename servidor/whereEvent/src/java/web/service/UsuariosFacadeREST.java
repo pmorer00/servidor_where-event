@@ -18,8 +18,6 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import web.Usuarios;
-import web.Eventos;
-import java.util.ArrayList;
 
 /**
  *
@@ -28,17 +26,17 @@ import java.util.ArrayList;
 @Stateless
 @Path("web.usuarios")
 public class UsuariosFacadeREST extends AbstractFacade<Usuarios> {
-    @PersistenceContext(unitName = "whereEventPU")
+    @PersistenceContext(unitName = "whereEventNewPU")
     private EntityManager em;
 
     public UsuariosFacadeREST() {
         super(Usuarios.class);
     }
-
+    
     @POST
     @Path("/iniciar_sesion")
     @Consumes({"application/xml", "application/json"})
-    @Produces({"application/xml", "application/json"})
+    @Produces("application/json")
     public Usuarios iniciar_sesion(Usuarios entity) {
         for(Usuarios usuarioAux : findAll()){
             if((usuarioAux.getNickname().equals(entity.getNickname())
@@ -50,25 +48,10 @@ public class UsuariosFacadeREST extends AbstractFacade<Usuarios> {
         return null;
     }
 
-    @GET
-    @Path("/get_eventos")
-    @Consumes({"application/xml", "application/json"})
-    @Produces("text/plain")
-    public List<Eventos> get_eventos(Usuarios usuario) {
-        List<Eventos> eventos = new ArrayList<Eventos>();
-        EventosFacadeREST eventosFR = new EventosFacadeREST();
-        for(Eventos eventoAux : eventosFR.findAll()){
-            if(usuario.getIdUsuario() == eventoAux.getIdUsuario().getIdUsuario()){
-                eventos.add(eventoAux);
-            }
-        }
-        
-        return eventos;
-    }
-
     @POST
     @Path("/crear")
     @Consumes({"application/xml", "application/json"})
+    @Produces({"application/xml", "application/json"})
     public Usuarios crear(Usuarios entity) {
         List<Usuarios> usuarios = findAll();
         for(Usuarios usuarioAux : usuarios){
@@ -97,15 +80,12 @@ public class UsuariosFacadeREST extends AbstractFacade<Usuarios> {
 
     @DELETE
     @Path("/eliminar/{id}")
-    @Consumes({"application/xml", "application/json"})
     @Produces("text/plain")
-    public boolean remove(@PathParam("id") Integer id, Usuarios entity) {
-        Usuarios sesion = iniciar_sesion(entity);
-        if(sesion != null && sesion.getIdUsuario() == entity.getIdUsuario()){
-            super.remove(super.find(id));
-        }
-        
-        return sesion != null;
+    public boolean remove(@PathParam("id") Integer id) {
+
+        super.remove(super.find(id));
+       
+        return true;
     }
 
     @GET
@@ -118,7 +98,7 @@ public class UsuariosFacadeREST extends AbstractFacade<Usuarios> {
     @GET
     @Override
     @Path("/get")
-    @Produces({"application/xml", "application/json"})
+    @Produces("application/json")
     public List<Usuarios> findAll() {
         return super.findAll();
     }

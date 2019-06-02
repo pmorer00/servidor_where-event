@@ -31,7 +31,6 @@ public class ApplicationConfig extends Application {
     private void addRestResourceClasses(Set<Class<?>> resources) {
         resources.add(web.service.CategoriasFacadeREST.class);
         resources.add(web.service.EventosFacadeREST.class);
-        resources.add(web.service.FechasYLugaresFacadeREST.class);
         resources.add(web.service.UsuariosFacadeREST.class);
     }
     

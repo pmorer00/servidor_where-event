@@ -5,6 +5,7 @@
  */
 package web.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -17,8 +18,8 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import web.Eventos;
 import web.Categorias;
+import web.Eventos;
 import web.Usuarios;
 
 /**
@@ -28,25 +29,35 @@ import web.Usuarios;
 @Stateless
 @Path("web.eventos")
 public class EventosFacadeREST extends AbstractFacade<Eventos> {
-    @PersistenceContext(unitName = "whereEventPU")
+    @PersistenceContext(unitName = "whereEventNewPU")
     private EntityManager em;
 
-    public EventosFacadeREST() {
+public EventosFacadeREST() {
         super(Eventos.class);
     }
+    
+    /*@GET
+    @Path("/get_categorias")
+    @Consumes("application/json")
+    @Produces("application/json")
+    public List<Categorias> get_categorias(Eventos eventos){
+        List<Categorias> categorias = new ArrayList<Categorias>();
+        CategoriasFacadeREST categoriaFR = new CategoriasFacadeREST();
+        for(Categorias categoriaAux : categoriaFR.findAll()){
+            if(eventos.getCategoriasCollection().contains(categoriaAux)){
+                categorias.add(categoriaAux);
+            }
+        }
+        
+        return categorias;
+        
+        
+    }*/
     
     public Usuarios iniciarSesion(Usuarios usuario){
         UsuariosFacadeREST usuarioFR = new UsuariosFacadeREST();
         Usuarios sesion = usuarioFR.iniciar_sesion(usuario);
         return sesion;
-    }
-    
-    @GET
-    @Path("/get_categoria/{id}")
-    @Consumes({"application/xml", "application/json"})
-    @Produces({"application/xml", "application/json"})
-    public Categorias get_categoria(Eventos entity){
-        return null;
     }
 
     @POST
@@ -81,12 +92,9 @@ public class EventosFacadeREST extends AbstractFacade<Eventos> {
 
     @DELETE
     @Path("/eliminar/{id}")
-    public boolean remove(@PathParam("id") Integer id, Usuarios usuario) {
-        if(iniciarSesion(usuario)!= null){
-            super.remove(super.find(id));
-            return true;
-        }
-        return false;
+    public boolean remove(@PathParam("id") Integer id) {
+        super.remove(super.find(id));
+        return true;
     }
 
     @GET
@@ -99,7 +107,7 @@ public class EventosFacadeREST extends AbstractFacade<Eventos> {
     @GET
     @Path("/get")
     @Override
-    @Produces({"application/xml", "application/json"})
+    @Produces("application/json")
     public List<Eventos> findAll() {
         return super.findAll();
     }

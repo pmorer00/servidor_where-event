@@ -27,48 +27,36 @@ import web.Usuarios;
 @Stateless
 @Path("web.categorias")
 public class CategoriasFacadeREST extends AbstractFacade<Categorias> {
-    @PersistenceContext(unitName = "whereEventPU")
+    @PersistenceContext(unitName = "whereEventNewPU")
     private EntityManager em;
 
     public CategoriasFacadeREST() {
         super(Categorias.class);
     }
     
-    public Usuarios tienePermisos(Usuarios usuario){
-        UsuariosFacadeREST usuarioFR = new UsuariosFacadeREST();
-        Usuarios sesion = usuarioFR.iniciar_sesion(usuario);
-        if(sesion!=null && sesion.getEsAdmin()){
-            return sesion;
-        }
-        return null;
-    }
+    //public List<Categorias> 
 
     @POST
     @Path("/crear")
     @Consumes({"application/xml", "application/json"})
-    public boolean crear(Categorias entity, Usuarios usuario) {
-        if(tienePermisos(usuario)!=null){
-            for(Categorias categoriaAux : findAll()){
-                if(categoriaAux.getNombre().equals(entity.getNombre())){
-                    return false;
-                }
+    public boolean crear(Categorias entity) {
+        for(Categorias categoriaAux : findAll()){
+            if(categoriaAux.getNombre().equals(entity.getNombre())){
+                return false;
             }
-            super.create(entity);
-            return true;
         }
-        return false;
+        super.create(entity);
+        return true;
     }
 
     @PUT
     @Path("/modificar/{id}")
     @Consumes({"application/xml", "application/json"})
-    public boolean edit(@PathParam("id") Integer id, Categorias entity, Usuarios usuario) {
-        if(tienePermisos(usuario)!=null){
-            for(Categorias categoriaAux : findAll()){
-                if(categoriaAux.getIdCategoria()==entity.getIdCategoria()){
-                    super.edit(entity);
-                    return true;
-                }
+    public boolean edit(@PathParam("id") Integer id, Categorias entity) {
+        for(Categorias categoriaAux : findAll()){
+            if(categoriaAux.getIdCategoria()==entity.getIdCategoria()){
+                super.edit(entity);
+                return true;
             }
         }
         return false;
@@ -76,12 +64,8 @@ public class CategoriasFacadeREST extends AbstractFacade<Categorias> {
 
     @DELETE
     @Path("/eliminar/{id}")
-    public boolean remove(@PathParam("id") Integer id, Usuarios usuario) {
-        if(tienePermisos(usuario)!=null){
-            super.remove(super.find(id));
-            return true;
-        }
-        return false;
+    public void remove(@PathParam("id") Integer id, Usuarios usuario) {
+        super.remove(super.find(id));
     }
 
     @GET
@@ -94,7 +78,7 @@ public class CategoriasFacadeREST extends AbstractFacade<Categorias> {
     @GET
     @Override
     @Path("/get")
-    @Produces({"application/xml", "application/json"})
+    @Produces("application/json")
     public List<Categorias> findAll() {
         return super.findAll();
     }
@@ -119,3 +103,4 @@ public class CategoriasFacadeREST extends AbstractFacade<Categorias> {
     }
     
 }
+
